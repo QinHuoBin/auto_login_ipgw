@@ -15,6 +15,10 @@ def check_online():
     if '"error":"ok"' in login_status:
         return True
 
+    # 有时候会出现504 Gateway Time-out错误，一般是校园网卡了，忽略之
+    if '504 Gateway Time-out' in login_status:
+        return False
+
     raise ValueError(login_status)
 
 

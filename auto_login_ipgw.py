@@ -1,6 +1,7 @@
 import time
 import requests
 import config
+import traceback
 from login_ipgw import login
 
 # 获取格式化时间的函数
@@ -39,6 +40,9 @@ def main():
                 print(f'{t()} online')
         except requests.exceptions.ConnectionError:
             print(f'{t()} 未连接校园网wifi')
+        except Exception:
+            print(f'{t()} 发生了其他错误')
+            traceback.print_exc()
 
         # 如果没登录，下次检测间隔就更短
         if not is_online:

@@ -9,7 +9,7 @@ t = lambda: time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
 def check_online():
     """检查是否登录ipgw"""
-    login_status = requests.get('https://ipgw.neu.edu.cn/cgi-bin/rad_user_info?callback=%20').text
+    login_status = requests.get('https://ipgw.neu.edu.cn/cgi-bin/rad_user_info?callback=%20',timeout=1).text
     if '"error":"not_online_error"' in login_status:
         return False
     if '"error":"ok"' in login_status:

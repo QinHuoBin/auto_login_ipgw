@@ -6,7 +6,7 @@ LOGIN_URL = 'https://pass.neu.edu.cn/tpass/login?service=http://ipgw.neu.edu.cn/
 def login_with_acid(ac_id, student_id: str, password: str):
     # 访问统一登录获取lt
     session = requests.Session()
-    get_pass_page = session.get(LOGIN_URL.format(ac_id))
+    get_pass_page = session.get(LOGIN_URL.format(ac_id),timeout=1)
     if get_pass_page.status_code != 200:
         return False, f'访问pass.neu.edu.cn失败，状态码：{get_pass_page.status_code}'
     # text = ...<input type="hidden" id="lt" name="lt" value="LT-29360-**********-tpass" />\r\n\t\t\t
@@ -37,7 +37,8 @@ def login_with_acid(ac_id, student_id: str, password: str):
                                       'pl': pl,
                                       'lt': lt,
                                       'execution': execution,
-                                      '_eventId': 'submit'})
+                                      '_eventId': 'submit'},
+                                timeout=1)
     text = get_sso_href.text
 
     # 检测是否账号错误
@@ -48,7 +49,7 @@ def login_with_acid(ac_id, student_id: str, password: str):
     target = 'ticket='
     half = text[text.index(target) + len(target):]
     href = half[:half.index('"')]
-    sso_login = session.get(f'http://ipgw.neu.edu.cn/v1/srun_portal_sso?ac_id={ac_id}&ticket=' + href)
+    sso_login = session.get(f'http://ipgw.neu.edu.cn/v1/srun_portal_sso?ac_id={ac_id}&ticket=' + href,timeout=1)
     if 'success' in sso_login.text:
         return True, None
     else:
